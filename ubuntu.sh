@@ -64,7 +64,7 @@ done
 printf "\x1b[38;5;214m[${time1}]\e[0m \x1b[38;5;83m[Installer thread/INFO]:\e[0m \x1b[38;5;87m Successfully wrote stubs!\n"
 
 ##disable man-db forever
-cat <<"EOF" | tee etc/dpkg/dpkg.cfg.d/01_nodoc
+cat <<"EOF" | tee etc/dpkg/dpkg.cfg.d/01_nodoc >/dev/null
 # Delete locales
 path-exclude=/usr/share/locale/*
 path-include=/usr/share/locale/en/*
@@ -102,7 +102,7 @@ command="proot"
 #command+=" -k 4.14.81"
 command+=" --link2symlink"
 command+=" -0"
-command+=" -r \$HOME/$dir"
+command+=" -r $dir"
 command+=" -b /dev -b /proc -b /sys"
 command+=" -b \$HOME/ubuntu-fs/tmp:/dev/shm"
 command+=" -b /data/data/com.termux"
