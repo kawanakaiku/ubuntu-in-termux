@@ -2,6 +2,9 @@
 
 termux-wake-lock
 
+##disable login message
+echo -n | tee $HOME/../usr/etc/motd
+
 ##enable fullscreen
 string="fullscreen = true"
 termuxprop=$HOME/.termux/termux.properties
@@ -146,7 +149,7 @@ command+=" HOME=/root"
 command+=" PATH=/usr/local/sbin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/games:/usr/local/games:/root/bin"
 command+=" TERM=\$TERM"
 command+=" LANG=C.UTF-8"
-command+=" external=\$((mount | grep -e " /storage/" | grep -v -e " /storage/emulated" | head -n1 | awk '{print \$3}') || echo "/sdcard")"
+command+=" SD=\$((mount | grep -e " /storage/" | grep -v -e " /storage/emulated" | head -n1 | awk '{print \$3}') || echo "/sdcard")"
 command+=" /bin/bash --login"
 com="\$@"
 if [ -z "\$1" ];then
@@ -158,14 +161,14 @@ EOM
 chmod +x "$script"
 
 ##add ~/bin to PATH
-bashrc='export PATH=$PATH:$HOME/bin'
-if ! grep -q "^$bashrc" "$HOME/.bashrc" 2>/dev/null ;then
-   echo "$bashrc" | tee -a "$HOME/.bashrc" >/dev/null
+bashrc='export PATH=$PATH:$HOME/bin\nexec $HOME/bin/startubuntu.sh'
+if ! grep -zoPq "^$bashrc" "$HOME/.bashrc" 2>/dev/null ;then
+   echo -e "$bashrc" | tee -a "$HOME/.bashrc" >/dev/null
 fi
 
 
 unwanted="tumbler ubuntu-report popularity-contest apport whoopsie apport-symptoms snap snapd apparmor synaptic rsyslog man-db yelp-xsl yelp"
-wanted="htop ncdu nano vim bash-completion wget curl ffmpeg p7zip-full p7zip-rar python3-pip python3-requests python3-numpy python3-matplotlib python3-pandas python3-sklearn python3-pyftpdlib python3-bs4 unar pv aria2 nodejs npm ruby"
+wanted="htop ncdu nano vim bash-completion wget curl ffmpeg p7zip-full p7zip-rar python3-pip python3-requests python3-numpy python3-matplotlib python3-pandas python3-sklearn python3-pyftpdlib python3-bs4 unar pv aria2 nodejs npm ruby imagemagick"
 errors="udisks2 dbus"
 (
 ##disable tzdata asking
