@@ -39,11 +39,12 @@ base=${download}/ubuntu-base-${UBUNTU_VERSION}-base-${ARCHITECTURE}.tar.gz
 if [ -d "${dir}" ];then
     printf "\x1b[38;5;214m[${time1}]\e[0m \x1b[38;5;227m[WARNING]:\e[0m \x1b[38;5;87m Skipping the download\n"
     rm -rf "${dir}"
-elif [ -z "$(command -v proot)" ];then
+fi
+while [ -z "$(command -v proot)" ];do
     printf "\x1b[38;5;214m[${time1}]\e[0m \x1b[38;5;203m[ERROR]:\e[0m \x1b[38;5;87m Installing proot.\n"
     printf "\e[0m"
-    pkg install -y proot
-fi
+    pkg install -y proot || sleep 1
+done
 if [ ! -f "${base}" ];then
     printf "\x1b[38;5;214m[${time1}]\e[0m \x1b[38;5;83m[Installer thread/INFO]:\e[0m \x1b[38;5;87m Downloading the ubuntu rootfs, please wait...\n"
     curl http://cdimage.ubuntu.com/ubuntu-base/releases/${UBUNTU_VERSION}/release/ubuntu-base-${UBUNTU_VERSION}-base-${ARCHITECTURE}.tar.gz --silent --show-error --output "${base}"
@@ -140,7 +141,7 @@ chmod +x "$script"
 
 ##add ~/bin to PATH
 bashrc='export PATH=$PATH:$HOME/bin'
-if ! grep -q "^$bashrc" "$HOME/.bashrc" ;then
+if ! grep -q "^$bashrc" "$HOME/.bashrc" >/dev/null ;then
    echo "$bashrc" | tee -a "$HOME/.bashrc" >/dev/null
 fi
 
