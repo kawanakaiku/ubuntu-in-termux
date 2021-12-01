@@ -82,6 +82,11 @@ path-exclude=/etc/cron.monthly/*
 path-exclude=/etc/cron.weekly/*
 EOF
 
+##disable apt translation-en
+cat <<"EOF" | tee etc/apt/apt.conf.d/99translations >/dev/null
+Acquire::Languages "none";
+EOF
+
 ##disable security updates
 sed -i -e 's@\(^deb http[:/.a-z/-]* [a-z]*-\)@# \1@g'  etc/apt/sources.list
 
@@ -128,13 +133,15 @@ chmod +x "$script"
 
 ##add ~/bin to PATH
 bashrc='export PATH=$PATH:$HOME/bin'
-if ! grep -q "^$bashrc" "$HOME/.bashrc" ;then echo "$bashrc" | tee -a "$HOME/.bashrc" ;fi
+if ! grep -q "^$bashrc" "$HOME/.bashrc" ;then
+   echo "$bashrc" | tee -a "$HOME/.bashrc" >/dev/null
+fi
 
 
 unwanted="tumbler ubuntu-report popularity-contest apport whoopsie apport-symptoms snap snapd apparmor synaptic rsyslog man-db yelp-xsl yelp"
 wanted="htop ncdu nano vim bash-completion wget curl ffmpeg p7zip-full p7zip-rar python3-pip python3-requests python3-numpy python3-matplotlib python3-pandas python3-sklearn python3-pyftpdlib python3-bs4 unar pv aria2"
 (
-echo -e "apt-get update \napt-get purge -y --auto-remove $unwanted \napt-mark hold $unwanted \napt-get install $wanted"
+echo -e "apt-get update \napt-get purge -y --auto-remove $unwanted \napt-mark hold $unwanted \napt-get install -y $wanted"
 echo -e "cd /root \nmkdir -p bin \ncd bin \ncurl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o yt-dlp &&\n
 chmod a+rx yt-dlp"
 )| $script sh
