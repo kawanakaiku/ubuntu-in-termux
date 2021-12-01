@@ -1,5 +1,7 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
+termux-wake-lock
+
 ##enable fullscreen
 string="fullscreen = true"
 termuxprop=$HOME/.termux/termux.properties
@@ -52,7 +54,11 @@ fi
 while [ -z "$(command -v proot)" ];do
     printf "\x1b[38;5;214m[${time1}]\e[0m \x1b[38;5;203m[ERROR]:\e[0m \x1b[38;5;87m Installing proot.\n"
     printf "\e[0m"
-    pkg install -y proot || sleep 1
+    if compgen -G "${termuxtmp}/proot_*.deb" >/dev/null && compgen -G "${termuxtmp}/libtalloc_*.deb" >/dev/null ;then
+       apt install ${termuxtmp}/{proot,libtalloc}_*.deb"
+    else
+       pkg install -y proot || sleep 1
+    fi
 done
 if [ ! -f "${base}" ];then
     printf "\x1b[38;5;214m[${time1}]\e[0m \x1b[38;5;83m[Installer thread/INFO]:\e[0m \x1b[38;5;87m Downloading the ubuntu rootfs, please wait...\n"
@@ -162,7 +168,9 @@ wanted="htop ncdu nano vim bash-completion wget curl ffmpeg p7zip-full p7zip-rar
 ##disable tzdata asking
 echo -e "export DEBIAN_FRONTEND=noninteractive"
 echo -e "ln -fs /usr/share/zoneinfo/Asia/Tokyo /etc/localtime"
-echo -e "apt-get update \napt-get purge -y --auto-remove $unwanted \napt-mark hold $unwanted \napt-get install -y $wanted"
+echo -e "apt-get update \napt-get purge -y --auto-remove $unwanted \napt-mark hold $unwanted"
+echo -e "apt-get install -y $wanted"
+echo -e "rm -f /var/lib/dpkg/info/dbus.postinst \napt-get --fix-broken install"
 echo -e "cd /root \nmkdir -p bin \ncd bin \ncurl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o yt-dlp &&\n
 chmod a+rx yt-dlp"
 )| $script sh
@@ -175,3 +183,7 @@ printf "\x1b[38;5;214m[${time1}]\e[0m \x1b[38;5;83m[Installer thread/INFO]:\e[0m
 printf "\x1b[38;5;214m[${time1}]\e[0m \x1b[38;5;83m[Installer thread/INFO]:\e[0m \x1b[38;5;87m Successfully made startubuntu.sh executable\n"
 printf "\x1b[38;5;214m[${time1}]\e[0m \x1b[38;5;83m[Installer thread/INFO]:\e[0m \x1b[38;5;87m The installation has been completed! You can now launch Ubuntu with ./startubuntu.sh\n"
 printf "\e[0m"
+
+
+termux-wake-unlock
+exit
