@@ -55,7 +55,7 @@ while [ -z "$(command -v proot)" ];do
     printf "\x1b[38;5;214m[${time1}]\e[0m \x1b[38;5;203m[ERROR]:\e[0m \x1b[38;5;87m Installing proot.\n"
     printf "\e[0m"
     if compgen -G "${termuxtmp}/proot_*.deb" >/dev/null && compgen -G "${termuxtmp}/libtalloc_*.deb" >/dev/null ;then
-       apt install ${termuxtmp}/{proot,libtalloc}_*.deb"
+       apt install ${termuxtmp}/{proot,libtalloc}_*.deb
     else
        pkg install -y proot || sleep 1
     fi
