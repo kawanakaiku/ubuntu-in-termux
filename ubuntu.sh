@@ -42,6 +42,7 @@ mkdir -p "$termuxtmp" "$debarchive"
 
 ##termux deb package to external
 rm -rf $HOME/../../cache/apt/archives
+mkdir -p $HOME/../../cache/apt
 ln -s ${termuxtmp} $HOME/../../cache/apt/archives
 
 if [ -d "${dir}" ];then
@@ -105,6 +106,7 @@ sed -i -e 's@\(^deb http[:/.a-z/-]* [a-z]*-\)@# \1@g'  etc/apt/sources.list
 
 ##download deb package to external
 rm -rf var/cache/apt/archives
+mkdir -p var/cache/apt
 ln -s ${debarchive} var/cache/apt/archives
 
 
