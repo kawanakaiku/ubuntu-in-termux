@@ -41,8 +41,8 @@ done
 mkdir -p "$termuxtmp" "$debarchive"
 
 ##termux deb package to external
-rm -rf var/cache/apt/archives
-ln -s ${debarchive} var/cache/apt/archives
+rm -rf $HOME/../../cache/apt/archives
+ln -s ${termuxtmp} $HOME/../../cache/apt/archives
 
 if [ -d "${dir}" ];then
     printf "\x1b[38;5;214m[${time1}]\e[0m \x1b[38;5;227m[WARNING]:\e[0m \x1b[38;5;87m Skipping the download\n"
