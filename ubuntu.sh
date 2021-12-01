@@ -10,18 +10,6 @@ fi
 
 time1="$( date +"%r" )"
 
-external=/storage/FFD9-7D43
-download=$external/Download
-debarchive=$external/deb
-
-
-until mkdir -p "$download";do
-   printf "\x1b[38;5;214m[${time1}]\e[0m \x1b[38;5;203m[ERROR]:\e[0m \x1b[38;5;87m Grant storage permission.\n"
-   sleep 1
-   am start -a android.settings.APPLICATION_DETAILS_SETTINGS -d package:com.termux
-   sleep 3
-done
-mkdir -p "$debarchive"
 
 dir=${HOME}/ubuntu-fs
 UBUNTU_VERSION=21.10
@@ -34,7 +22,27 @@ case "$ARCHITECTURE" in
         exit 1;;
 esac
 
+external=/storage/FFD9-7D43
+download=$external/Download
+debarchive=$external/deb
+termuxtmp=$external/deb
+debarchive=$external/deb/ubuntu-${UBUNTU_VERSION}-${ARCHITECTURE}
+
 base=${download}/ubuntu-base-${UBUNTU_VERSION}-base-${ARCHITECTURE}.tar.gz
+
+
+##grant storage permission
+until mkdir -p "$download";do
+   printf "\x1b[38;5;214m[${time1}]\e[0m \x1b[38;5;203m[ERROR]:\e[0m \x1b[38;5;87m Grant storage permission.\n"
+   sleep 1
+   am start -a android.settings.APPLICATION_DETAILS_SETTINGS -d package:com.termux
+   sleep 3
+done
+mkdir -p "$termuxtmp" "$debarchive"
+
+##termux deb package to external
+rm -rf var/cache/apt/archives
+ln -s ${debarchive} var/cache/apt/archives
 
 if [ -d "${dir}" ];then
     printf "\x1b[38;5;214m[${time1}]\e[0m \x1b[38;5;227m[WARNING]:\e[0m \x1b[38;5;87m Skipping the download\n"
