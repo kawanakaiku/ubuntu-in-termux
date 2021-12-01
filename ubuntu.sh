@@ -10,7 +10,10 @@ fi
 
 time1="$( date +"%r" )"
 
-download=/sdcard/Download
+external=/storage/FFD9-7D43
+download=$external/Download
+debarchive=$external/deb
+
 
 until mkdir -p "$download";do
    printf "\x1b[38;5;214m[${time1}]\e[0m \x1b[38;5;203m[ERROR]:\e[0m \x1b[38;5;87m Grant storage permission.\n"
@@ -18,6 +21,7 @@ until mkdir -p "$download";do
    am start -a android.settings.APPLICATION_DETAILS_SETTINGS -d package:com.termux
    sleep 3
 done
+mkdir -p "$debarchive"
 
 dir=${HOME}/ubuntu-fs
 UBUNTU_VERSION=21.10
@@ -90,6 +94,9 @@ EOF
 ##disable security updates
 sed -i -e 's@\(^deb http[:/.a-z/-]* [a-z]*-\)@# \1@g'  etc/apt/sources.list
 
+##download deb package to external
+rm -rf var/cache/apt/archives
+ln -s ${debarchive} var/cache/apt/archives
 
 
 bin=$HOME/bin
