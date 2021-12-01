@@ -146,6 +146,7 @@ command+=" HOME=/root"
 command+=" PATH=/usr/local/sbin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/games:/usr/local/games:/root/bin"
 command+=" TERM=\$TERM"
 command+=" LANG=C.UTF-8"
+command+=" external=\$((mount | grep -e " /storage/" | grep -v -e " /storage/emulated" | head -n1 | awk '{print \$3}') || echo "/sdcard")"
 command+=" /bin/bash --login"
 com="\$@"
 if [ -z "\$1" ];then
