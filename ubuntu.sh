@@ -63,7 +63,7 @@ done
 printf "\x1b[38;5;214m[${time1}]\e[0m \x1b[38;5;83m[Installer thread/INFO]:\e[0m \x1b[38;5;87m Successfully wrote stubs!\n"
 
 ##disable man-db forever
-cat <<"EOF" | sudo tee etc/dpkg/dpkg.cfg.d/01_nodoc
+cat <<"EOF" | tee etc/dpkg/dpkg.cfg.d/01_nodoc
 # Delete locales
 path-exclude=/usr/share/locale/*
 path-include=/usr/share/locale/en/*
@@ -85,7 +85,6 @@ EOF
 sed -i -e 's@\(^deb http[:/.a-z/-]* [a-z]*-\)@# \1@g'  etc/apt/sources.list
 
 
-fi
 
 bin=$HOME/bin
 script=$bin/startubuntu.sh
