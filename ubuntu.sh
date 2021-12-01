@@ -24,7 +24,8 @@ case "$ARCHITECTURE" in
         exit 1;;
 esac
 
-external=/storage/FFD9-7D43
+external=$((mount | grep -e " /storage/" | grep -v -e " /storage/emulated" | head -n1 | awk '{print $3}') || echo "/sdcard")
+#/storage/FFD9-7D43
 download=$external/Download
 debarchive=$external/deb
 termuxtmp=$external/deb
