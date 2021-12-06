@@ -91,8 +91,6 @@ printf "\x1b[38;5;214m[${time1}]\e[0m \x1b[38;5;83m[Installer thread/INFO]:\e[0m
 cat <<"EOF" | tee etc/dpkg/dpkg.cfg.d/01_nodoc >/dev/null
 # Delete locales
 path-exclude=/usr/share/locale/*
-path-include=/usr/share/locale/en/*
-path-include=/usr/share/locale/ja/*
 # Delete man pages
 path-exclude=/usr/share/man/*
 # Delete docs
@@ -173,12 +171,11 @@ errors="udisks2 dbus libpam-systemd:$ARCHITECTURE policykit-1 networkd-dispatche
 (
 ##disable tzdata asking
 echo -e "export DEBIAN_FRONTEND=noninteractive"
-echo -e "ln -fs /usr/share/zoneinfo/Asia/Tokyo /etc/localtime"
+echo -e "ln -fs /usr/share/zoneinfo/UTC /etc/localtime"
 echo -e "apt-get update \napt-get purge -y --auto-remove $unwanted \napt-mark hold $unwanted"
 echo -e "apt-get install --no-install-recommends -y $wanted $errors"
 echo -e "rm -f $(for i in $errors;do echo /var/lib/dpkg/info/$i.postinst;done) \napt-get --fix-broken install"
-echo -e "cd /root \nmkdir -p bin \ncd bin \ncurl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o yt-dlp &&\n
-chmod a+rx yt-dlp"
+#echo -e "cd /root \nmkdir -p bin \ncd bin \ncurl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o yt-dlp &&\nchmod a+rx yt-dlp"
 )| $script sh
 
 printf "\x1b[38;5;214m[${time1}]\e[0m \x1b[38;5;83m[Installer thread/INFO]:\e[0m \x1b[38;5;87m The start script has been successfully created!\n"
